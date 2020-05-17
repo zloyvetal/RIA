@@ -9,6 +9,13 @@ my_kay = "mnrOlvNOeTnNJHyFrkjk6RFZ0NfDkftYxlO2cD1t"
 
 
 def create_json_with_data(input_url: str, api_key: str, json_name: str):
+    """
+    This function for download data from API and save it in .json file.
+    :param input_url:
+    :param api_key:
+    :param json_name:
+    :return:
+    """
     http = urllib3.PoolManager()
 
     our_url = f'{input_url}'.replace('YOUR_API_KEY', api_key)
@@ -29,7 +36,7 @@ def url_search(search_url: str) -> str:
     return search_line
 
 
-def find_id(json_name: str) -> tuple:
+def find_id(json_name: str) -> list:
     # open json with data
     all_search_data = json.load(open(f'{json_name}'))
 
@@ -44,8 +51,21 @@ def find_id(json_name: str) -> tuple:
     for ids in old_cars:
         list_of_used_cars.append(ids['id'])
 
-    new_and_old_cars = (new_cars, old_cars)
+    output_cars = []
+    for i in new_cars:
+        output_cars.append(i)
+    for i in list_of_used_cars:
+        output_cars.append(i)
 
-    return new_and_old_cars
+    return output_cars
 
 
+def read_from_id(list_with_ids: list):
+    for ids in list_with_ids:
+        create_json_with_data(f'https://developers.ria.com/auto/info?api_key=YOUR_API_KEY&auto_id={ids}', my_kay,
+                              f'{ids}.json')
+
+
+lets_try = find_id('bmwX6.json')
+
+read_from_id(lets_try)
